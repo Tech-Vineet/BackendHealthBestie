@@ -1,19 +1,25 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {User} from '../models/user.js'
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+
 
 export const signUp = async(req,res)=>{
-    const {username, password, email} = req.body;
-    const userExists = User.findOne({username: username})
+    const {name, password, email} = req.body;
+    const userExists = await User.findOne({email: email})
 
     if(userExists) {
         return res.status(400).json({error: "User already exists"})
     }
+    
+    const hashedPassword = await bcrypt.hash(password, 10)
 
-    const newUser = new User({username, password, email})
+    const newUser = new User({name, password: hashedPassword, email})
     await newUser.save()
-    const token = json.sign()
-    res.json({success: true, message: "User created successfully"})
+    const token = jwt.sign({id : newUser._id}, "AKLHSDHSAGFDJHRUIHYJDSKKJ", {expiresIn: '1h'})
+    res.json({success: true, message: "User created successfully",
+        token: token
+    })
 
     
 }
