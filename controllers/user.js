@@ -24,10 +24,46 @@ export const signUp = async(req,res)=>{
     
 }
 
+export const login = async (req, res) => {
+    try {
+        const { password, email } = req.body;
 
-export const login = async()=>{
+        // Check if email and password are provided in the request body
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email and password are required" });
+        }
 
-}
+        // Find the user by email
+        const user = await User.findOne({ email }).select('+password');
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Check if user password exists to avoid undefined errors
+        if (!user.password) {
+            return res.status(500).json({ error: "User password is missing" });
+        }
+
+        // Validate password using bcrypt
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: "Invalid password" });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Successful login response
+        res.json({
+            success: true,
+            message: "Logged in successfully",
+            token,
+        });
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ error: "Server error, please try again later" });
+    }
+};
 
 
 export const sendResponse = async(req,res)=>{
