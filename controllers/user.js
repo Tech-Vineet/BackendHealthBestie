@@ -67,15 +67,22 @@ export const login = async (req, res) => {
 
 
 export const sendResponse = async(req,res)=>{
-    const prompt = req.body.prompt
+    try{
+        const prompt = req.body.prompt
     const genAI = new GoogleGenerativeAI('AIzaSyDnLTnQu9MfqTRvIpLRW7dSUWl-kwsB_58');
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
     const result = await model.generateContent(prompt);
     res.json({
         success : true,
         result: result.response.text()
     });
+
+    }catch(error){
+        console.error("Error generating response:", );
+        res.status(500).json({ error: `Server error, please try again later, ${error}` });
+    }
+    
 }
 
 
