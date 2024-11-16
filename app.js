@@ -1,25 +1,29 @@
 import express from 'express';
-import userRouter from './routes/user.js'
-import {config} from 'dotenv';
+import userRouter from './routes/user.js';
+import { config } from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-
-
 export const app = express();
-config ({
+
+// Load environment variables
+config({
     path: './data/config.env',
-})
+});
 
-
-
-//Middleware
+// Middleware
+app.use(cors({ 
+    origin: 'http://localhost:3000',  // Allow requests from localhost:3000 (adjust for production)
+    credentials: true,  // Allow cookies to be sent with requests
+}));
 app.use(express.json());
-app.use('/users',userRouter);
 app.use(cookieParser());
-app.use(cors()); 
 
+// User Routes
+app.use('/users', userRouter);
 
-app.get('/', (req,res)=>{
+// Basic route
+app.get('/', (req, res) => {
     res.send('Hello World');
-})
+});
+
