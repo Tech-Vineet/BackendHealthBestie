@@ -68,7 +68,7 @@ export const login = async (req, res) => {
 
 export const sendResponse = async(req,res)=>{
     try{
-        const prompt = req.body.prompt
+        const prompt = req.param('prompt');
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
