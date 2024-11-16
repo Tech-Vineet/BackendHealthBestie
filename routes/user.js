@@ -7,7 +7,7 @@ router.use(express.json());
 
 router.post('/signup', signUp);
 router.post('/login', login);
-router.get('/conversations', sendResponse);
+router.post('/conversations', sendResponse);
 
 export default router;
 
