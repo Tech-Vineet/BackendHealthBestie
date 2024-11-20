@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {User} from '../models/user.js'
-import Chat from '../models/chat.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
@@ -66,72 +65,43 @@ export const login = async (req, res) => {
     }
 };
 
-// export const response = async (req, res) => {
-//     const { message } = req.body;
+export const response = async (req, res) => {
+    const { message } = req.body;
   
-//     if (!message) {
-//       return res.status(400).json({ error: "Message is required" });
-//     }
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" });
+    }
   
-//     try {
-//       // Initialize Google Generative AI
-//       const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-//       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });
+    try {
+      // Initialize Google Generative AI
+      const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });
   
-//       // Start chat with initial history
-//       const chat = model.startChat({
-//         history: [
-//           {
-//             role: "user",
-//             parts: [{ text: "Hello" }],
-//           },
-//           {
-//             role: "model",
-//             parts: [{ text: "Great to meet you. What would you like to know?" }],
-//           },
-//         ],
-//       });
+      // Start chat with initial history
+      const chat = model.startChat({
+        history: [
+          {
+            role: "user",
+            parts: [{ text: "Hello" }],
+          },
+          {
+            role: "model",
+            parts: [{ text: "Great to meet you. What would you like to know?" }],
+          },
+        ],
+      });
   
-//       // Send message to the model
-//       let result = await chat.sendMessage(message);
+      // Send message to the model
+      let result = await chat.sendMessage(message);
   
-//       // Send the AI's response back to the client
-//       res.status(200).json({ response: result.response.text() });
-//     } catch (error) {
-//       console.error('Error communicating with Google Generative AI:', error);
-//       res.status(500).json({ error: "Internal Server Error" });
-//     }
-//   };
-export const  response = async (req, res) => {
-  const { message } = req.body;
+      // Send the AI's response back to the client
+      res.status(200).json({ response: result.response.text() });
+    } catch (error) {
+      console.error('Error communicating with Google Generative AI:', error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  };
 
-  if (!message) {
-    return res.status(400).json({ error: "Message is required" });
-  }
-
-  try {
-    console.log("Initializing GoogleGenerativeAI...");
-    const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });
-
-    console.log("Starting chat...");
-    const chat = model.startChat({
-      history: [
-        { role: "user", parts: [{ text: "Hello" }] },
-        { role: "model", parts: [{ text: "Great to meet you. What would you like to know?" }] }
-      ]
-    });
-
-    console.log("Sending message...");
-    let result = await chat.sendMessage(message);
-    console.log("Response from Gemini API:", result.response.text());
-
-    res.status(200).json({ response: result.response.text() });
-  } catch (error) {
-    console.error("Error communicating with Google Generative AI:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 
 
 
