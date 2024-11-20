@@ -65,43 +65,6 @@ export const login = async (req, res) => {
     }
 };
 
-
-// export const sendResponse = async (req, res) => {
-//     try {
-//       const prompt = req.query.prompt;
-//       const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-//       const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-  
-//       // Initial response indicating loading state
-//       res.json({
-//         success: false,
-//         message: "Loading"
-//       });
-  
-//       // Generating content from Gemini API
-//       const result = await model.generateContent(prompt);
-  
-//       // Check if the result is successful and contains valid response text
-//       if (result && result.response && result.response.text) {
-//         res.json({
-//           success: true,
-//           result: result.response.text()
-//         });
-//       } else {
-//         // If the result is not valid or doesn't contain text
-//         res.json({
-//           success: false,
-//           message: "No valid response from Gemini API"
-//         });
-//       }
-  
-//     } catch (error) {
-//       console.error("Error generating response:", error);
-//       res.status(500).json({ 
-//         error: `Server error, please try again later. Error: ${error.message}` 
-//       });
-//     }
-//   };
 export const response = async (req, res) => {
     const { message } = req.body;
   

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const quizSchema = new mongoose.Schema({
   type: { type: String, required: true }, // e.g., "stress", "depression", "anxiety"
@@ -15,5 +15,5 @@ const quizSchema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("Quiz", quizSchema);
+export const Quiz = mongoose.model("Quiz", quizSchema);
 

@@ -1,4 +1,4 @@
-import Quiz from '../models/quiz';
+import {Quiz} from '../models/quiz.js';
 
 // Get questions by quiz type
 export const getQuizType = async (req, res) => {
