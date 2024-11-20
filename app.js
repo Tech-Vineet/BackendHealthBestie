@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // User Routes
-app.use('/users', userRouter);
+app.use('/api', userRouter);
 
 // Basic route
 app.get('/', (req, res) => {
