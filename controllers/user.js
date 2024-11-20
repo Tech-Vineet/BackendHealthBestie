@@ -102,61 +102,36 @@ export const login = async (req, res) => {
 //       res.status(500).json({ error: "Internal Server Error" });
 //     }
 //   };
-export const response = async (req, res) => {
-  const { message, voiceInput } = req.body;
+export const  response = async (req, res) => {
+  const { message } = req.body;
 
-  if (!message && !voiceInput) {
-    return res.status(400).json({ error: "Message or Voice Input is required" });
+  if (!message) {
+    return res.status(400).json({ error: "Message is required" });
   }
 
   try {
-    // Initialize Google Generative AI
+    console.log("Initializing GoogleGenerativeAI...");
     const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-    const model = genAI.getGenerativeModel({ model: "Gemini 1.5 Pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });
 
-    // Start chat with initial history
+    console.log("Starting chat...");
     const chat = model.startChat({
       history: [
-        {
-          role: "user",
-          parts: [{ text: "Hello" }],
-        },
-        {
-          role: "model",
-          parts: [{ text: "Great to meet you. What would you like to know?" }],
-        },
-      ],
+        { role: "user", parts: [{ text: "Hello" }] },
+        { role: "model", parts: [{ text: "Great to meet you. What would you like to know?" }] }
+      ]
     });
 
-    // Handle voice input (convert to text if needed)
-    let inputMessage = message;
-    if (voiceInput) {
-      inputMessage = await chat.voiceToText(voiceInput); // Assumes voice-to-text conversion is provided by Gemini
-    }
+    console.log("Sending message...");
+    let result = await chat.sendMessage(message);
+    console.log("Response from Gemini API:", result.response.text());
 
-    // Send message to the model
-    const result = await chat.sendMessage(inputMessage);
-
-    // Log chat in MongoDB
-    const newChat = new Chat({
-      userMessage: inputMessage,
-      aiResponse: result.response.text(),
-    });
-    await newChat.save();
-
-    // Optional: Convert AI response to voice (text-to-speech)
-    const voiceResponse = await chat.textToVoice(result.response.text()); // Assumes text-to-voice conversion is provided
-
-    // Respond with text and optional voice
-    res.status(200).json({
-      response: result.response.text(),
-      voiceResponse, // Include this if the client can handle audio
-    });
+    res.status(200).json({ response: result.response.text() });
   } catch (error) {
     console.error("Error communicating with Google Generative AI:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-}
+};
 
 
 
