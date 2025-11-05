@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 
 const quizSchema = new mongoose.Schema({
-  type: { type: String, required: true }, // e.g., "stress", "depression", "anxiety"
+  type: { type: String, required: true }, 
   questions: [
     {
       question: { type: String, required: true },
       options: [
         {
           text: { type: String, required: true },
-          score: { type: Number, required: true }, // Score associated with the option
+          score: { type: Number, required: true }, 
         },
       ],
     },
