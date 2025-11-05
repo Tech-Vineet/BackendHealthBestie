@@ -8,7 +8,7 @@ router.use(express.json());
 router.post('/signup', signUp);
 router.post('/login', login);
 // router.get('/conversations', sendResponse);
-router.post('/api/chat', response);
+router.post('/chat', response);
 
 export default router;
 

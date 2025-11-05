@@ -1,5 +1,5 @@
 import express from 'express';
-import {getQuizType,submitQuiz,addQuiz} from '../controllers/quiz'
+import {getQuizType,submitQuiz,addQuiz} from '../controllers/quiz.js'
 
 const router = express.Router();
 router.use(express.json());
