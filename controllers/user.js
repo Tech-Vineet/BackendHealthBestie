@@ -66,41 +66,33 @@ export const login = async (req, res) => {
 };
 
 export const response = async (req, res) => {
-    const { message } = req.body;
-  
-    if (!message) {
-      return res.status(400).json({ error: "Message is required" });
-    }
-  
-    try {
-      // Initialize Google Generative AI
-      const genAI = new  GoogleGenAI(process.env.API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  
-      // Start chat with initial history
-      const chat = model.startChat({
-        history: [
-          {
-            role: "user",
-            parts: [{ text: "Hello" }],
-          },
-          {
-            role: "model",
-            parts: [{ text: "Great to meet you. What would you like to know?" }],
-          },
-        ],
-      });
-  
-      // Send message to the model
-      let result = await chat.sendMessage(message);
-  
-      // Send the AI's response back to the client
-      res.status(200).json({ response: result.response.text() });
-    } catch (error) {
-      console.error('Error communicating with Google Generative AI:', error);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  };
+  const { message } = req.body;
+
+  if (!message) {
+    return res.status(400).json({ error: "Message is required" });
+  }
+
+  try {
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        { role: "user", parts: [{ text: "You are a kind, mental-health support chatbot." }] },
+        { role: "user", parts: [{ text: message }] }
+      ],
+      config: {
+        systemInstruction: "Provide emotional support. Be friendly, empathetic, and concise.",
+      }
+    });
+
+    res.status(200).json({ response: response.text });
+  } catch (error) {
+    console.error("Google GenAI Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 
 
 
