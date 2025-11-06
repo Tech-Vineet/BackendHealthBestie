@@ -65,6 +65,7 @@ export const login = async (req, res) => {
     }
 };
 
+
 export const response = async (req, res) => {
   const { message } = req.body;
 
@@ -73,17 +74,13 @@ export const response = async (req, res) => {
   }
 
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY  
+    });
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: [
-        { role: "user", parts: [{ text: "You are a kind, mental-health support chatbot." }] },
-        { role: "user", parts: [{ text: message }] }
-      ],
-      config: {
-        systemInstruction: "Provide emotional support. Be friendly, empathetic, and concise.",
-      }
+      contents: message,
     });
 
     res.status(200).json({ response: response.text });
@@ -92,8 +89,3 @@ export const response = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-
-
-
-
