@@ -75,7 +75,7 @@ export const response = async (req, res) => {
 
   try {
     const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY  
+      apiKey: process.env.API_KEY  
     });
 
     const response = await ai.models.generateContent({
